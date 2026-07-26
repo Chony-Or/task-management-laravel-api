@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'is_active',
+        'team_id'
     ];
     
     protected $hidden = [
@@ -34,4 +35,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function team() {
+        return $this->belongsTo(Team::class);
+    }
+    public function tasksAssigned() {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
+
+    public function tasksCreated() {
+        return $this->hasMany(Task::class, 'created_by');
+    }
+
 }
