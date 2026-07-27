@@ -20,7 +20,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 
-        // ✅ Add built-in CORS middleware
+        // ✅ Add custom and built-in CORS middleware
+        \App\Http\Middleware\CorsMiddleware::class,
         \Illuminate\Http\Middleware\HandleCors::class,
     ];
 
