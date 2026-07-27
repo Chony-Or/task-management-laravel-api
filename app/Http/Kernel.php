@@ -13,16 +13,17 @@ class Kernel extends HttpKernel
      *
      * @var array<int, class-string|string>
      */
+    // Source - https://stackoverflow.com/a/57658719
+    // Posted by Sodruldeen Mustapha, modified by community. See post 'Timeline' for change history
+    // Retrieved 2026-07-27, License - CC BY-SA 4.0
+
     protected $middleware = [
-        // Laravel default middleware
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-
-        // ✅ Add custom and built-in CORS middleware
-        \App\Http\Middleware\CorsMiddleware::class,
-        \Illuminate\Http\Middleware\HandleCors::class,
+        \Illuminate\Http\Middleware\TrustProxies::class,
+        \App\Http\Middleware\Cors::class,
     ];
 
     /**
