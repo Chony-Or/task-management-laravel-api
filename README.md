@@ -1,122 +1,64 @@
 # Task Management Laravel API
 
-This project is a Laravel-based REST API for managing users, teams, and tasks. It uses Laravel Sanctum for token authentication and supports role-based access for admin, manager, and team member workflows.
+This repository contains the Laravel backend for the task management application. It exposes a REST API for authentication, users, teams, and tasks, and uses Laravel Sanctum for token-based authentication.
 
-## What this system includes
+## Architecture
 
-- Authentication with Sanctum
-  - Register a new user
-  - Login and receive an API token
-  - Access the authenticated user profile
+- Laravel 13 backend
+- REST API with Sanctum authentication
+- MySQL/SQLite-compatible database setup
+- React frontend consumes the API from the Vercel deployment
+- The frontend and backend are deployed separately: Vercel for the React app and Railway for the Laravel API
 
-- User management
-  - List users
-  - Create users (admin only)
-  - Update users (admin only)
-  - Toggle a user between active and inactive (admin only)
+## Local setup
 
-- Team management
-  - List teams
-  - Create teams
+### Requirements
 
-- Task management
-  - View all tasks (admin/manager)
-  - View tasks for a specific team (admin/manager)
-  - View tasks assigned to the authenticated member
-  - Create tasks
-  - View a single task
-  - Update task details
-  - Update task status with basic transition rules
-  - Cancel/delete a task by changing its status to cancelled
-
-## Main components
-
-- Controllers
-  - AuthController: handles registration and login
-  - UserController: manages users and user activity state
-  - TaskController: manages task listing, creation, updates, and status changes
-  - TeamController: manages teams
-
-- Models
-  - User: represents app users and their role/team relationship
-  - Team: groups users and tasks together
-  - Task: stores task details and ownership information
-
-- Routes
-  - API routes are defined in routes/api.php
-  - Protected routes require Sanctum authentication
-
-- Database
-  - Uses Laravel migrations for users, teams, tasks, and Sanctum tokens
-  - Seeders are available for sample data
-
-## Requirements
-
-Before setting up the project, make sure you have:
-
-- PHP 8.3 or newer
+- PHP 8.3+
 - Composer
-- Node.js and npm
-- A local web server is optional when using php artisan serve
+- Node.js 18+
+- SQLite or MySQL available locally
 
-## Setup instructions
-
-1. Clone the repository
-   ```bash
-   git clone <repository-url>
-   cd task-management-laravel-api
-   ```
-
-2. Install PHP dependencies
-   ```bash
-   composer install
-   ```
-
-3. Create the environment file
-   ```bash
-   cp .env.example .env
-   ```
-
-4. Generate the app key
-   ```bash
-   php artisan key:generate
-   ```
-
-5. Set up the database
-   The project is configured to use SQLite by default. If you want to keep the default setup, make sure the database file exists:
-   ```bash
-   touch database/database.sqlite
-   ```
-
-6. Run migrations and seed the database
-   ```bash
-   php artisan migrate --seed
-   ```
-
-7. Install frontend assets dependencies
-   ```bash
-   npm install
-   ```
-
-8. Build the frontend assets
-   ```bash
-   npm run build
-   ```
-
-9. Start the development server
-   ```bash
-   php artisan serve
-   ```
-
-You can also run the project with the included script:
+### Steps
 
 ```bash
-composer run dev
+git clone https://github.com/Chony-Or/task-management-laravel-api.git
+cd task-management-laravel-api
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
 ```
 
-## API overview
+If you use SQLite locally, make sure the database file exists:
 
-All API routes are prefixed with /api.
+```bash
+touch database/database.sqlite
+```
+
+## Test credentials
+
+The seeded users are:
+
+- Admin: admin@test.com / password123
+- Manager: manager@test.com / password123
+- Team Member: member@test.com / password123
+
+## Environment variables
+
+See [.env.example](.env.example) for the full list. Key variables:
+
+```env
+APP_ENV=local
+APP_URL=http://localhost:8000
+DB_CONNECTION=sqlite
+SESSION_DRIVER=database
+```
+
+## API endpoints
+
+All routes are prefixed with /api.
 
 ### Authentication
 
@@ -147,8 +89,13 @@ All API routes are prefixed with /api.
 - GET /api/teams
 - POST /api/teams
 
-## Role behavior
+## Deployment URLs
 
-- Admin: can manage users, view all tasks, and manage teams
-- Manager: can view all tasks and team-based task lists
-- Team member: can view tasks assigned to them and update their task status
+- Backend (Railway): https://task-management-laravel-api-production-b3f4.up.railway.app
+- Frontend (Vercel): https://task-management-react-nine.vercel.app
+
+## Running tests
+
+```bash
+php artisan test
+```
