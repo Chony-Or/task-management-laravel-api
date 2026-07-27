@@ -1,58 +1,154 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Task Management Laravel API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project is a Laravel-based REST API for managing users, teams, and tasks. It uses Laravel Sanctum for token authentication and supports role-based access for admin, manager, and team member workflows.
 
-## About Laravel
+## What this system includes
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Authentication with Sanctum
+  - Register a new user
+  - Login and receive an API token
+  - Access the authenticated user profile
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- User management
+  - List users
+  - Create users (admin only)
+  - Update users (admin only)
+  - Toggle a user between active and inactive (admin only)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Team management
+  - List teams
+  - Create teams
 
-## Learning Laravel
+- Task management
+  - View all tasks (admin/manager)
+  - View tasks for a specific team (admin/manager)
+  - View tasks assigned to the authenticated member
+  - Create tasks
+  - View a single task
+  - Update task details
+  - Update task status with basic transition rules
+  - Cancel/delete a task by changing its status to cancelled
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Main components
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Controllers
+  - AuthController: handles registration and login
+  - UserController: manages users and user activity state
+  - TaskController: manages task listing, creation, updates, and status changes
+  - TeamController: manages teams
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- Models
+  - User: represents app users and their role/team relationship
+  - Team: groups users and tasks together
+  - Task: stores task details and ownership information
 
-## Agentic Development
+- Routes
+  - API routes are defined in routes/api.php
+  - Protected routes require Sanctum authentication
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- Database
+  - Uses Laravel migrations for users, teams, tasks, and Sanctum tokens
+  - Seeders are available for sample data
+
+## Requirements
+
+Before setting up the project, make sure you have:
+
+- PHP 8.3 or newer
+- Composer
+- Node.js and npm
+- A local web server is optional when using php artisan serve
+
+## Setup instructions
+
+1. Clone the repository
+   ```bash
+   git clone <repository-url>
+   cd task-management-laravel-api
+   ```
+
+2. Install PHP dependencies
+   ```bash
+   composer install
+   ```
+
+3. Create the environment file
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Generate the app key
+   ```bash
+   php artisan key:generate
+   ```
+
+5. Set up the database
+   The project is configured to use SQLite by default. If you want to keep the default setup, make sure the database file exists:
+   ```bash
+   touch database/database.sqlite
+   ```
+
+6. Run migrations and seed the database
+   ```bash
+   php artisan migrate --seed
+   ```
+
+7. Install frontend assets dependencies
+   ```bash
+   npm install
+   ```
+
+8. Build the frontend assets
+   ```bash
+   npm run build
+   ```
+
+9. Start the development server
+   ```bash
+   php artisan serve
+   ```
+
+You can also run the project with the included script:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer run dev
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## API overview
 
-## Contributing
+All API routes are prefixed with /api.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Authentication
 
-## Code of Conduct
+- POST /api/register
+- POST /api/login
+- GET /api/user
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Users
 
-## Security Vulnerabilities
+- GET /api/users
+- POST /api/users
+- PUT /api/users/{id}
+- PATCH /api/users/{id}/toggle-active
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Tasks
 
-## License
+- GET /api/member/tasks
+- GET /api/admin/tasks
+- GET /api/teams/{team_id}/tasks
+- POST /api/tasks
+- GET /api/tasks/{id}
+- PATCH /api/tasks/{id}
+- PATCH /api/tasks/{id}/status
+- DELETE /api/tasks/{id}
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Teams
+
+- GET /api/teams
+- POST /api/teams
+
+## Role behavior
+
+- Admin: can manage users, view all tasks, and manage teams
+- Manager: can view all tasks and team-based task lists
+- Team member: can view tasks assigned to them and update their task status
