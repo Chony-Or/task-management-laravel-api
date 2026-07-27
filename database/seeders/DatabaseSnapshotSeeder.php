@@ -2,19 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
-class DatabaseSeeder extends Seeder
+use Illuminate\Support\Facades\DB;
+class DatabaseSnapshotSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
-        $this->call(DatabaseSnapshotSeeder::class);
+         DB::unprepared(file_get_contents(database_path('seed.sql')));
     }
 }
